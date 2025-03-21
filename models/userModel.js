@@ -1,5 +1,5 @@
 const pool = require("../db/connection");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const createUser = async (nombre, email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
