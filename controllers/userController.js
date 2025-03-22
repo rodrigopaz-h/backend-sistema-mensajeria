@@ -33,7 +33,7 @@ const login = async (req, res) => {
       return res.status(400).json({ mensaje: "Contraseña incorrecta" });
     }
 
-    const token = jwt.sign({ id: user.id, nombre: user.nombre }, "secreto", { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, nombre: user.nombre }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ mensaje: "Login exitoso", token, user: { id: user.id, nombre: user.nombre } });
   } catch (error) {
