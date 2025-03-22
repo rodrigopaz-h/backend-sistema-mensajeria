@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Rutas
 app.use("/api", userRoutes);
-app.use("/api/chat", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   res.send("Bienvenido a Rapaz Chat API");
