@@ -7,16 +7,20 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest --detectOpenHandles --forceExit"
+    "test": "jest --detectOpenHandles --forceExit",
+    "init-db": "node executeSQL.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "express": "^4.21.2",
+    "firebase": "^11.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
-    "pg": "^8.14.0"
+    "multer": "^1.4.5-lts.2",
+    "pg": "^8.14.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
