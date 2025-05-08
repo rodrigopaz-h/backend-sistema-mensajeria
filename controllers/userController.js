@@ -45,15 +45,15 @@ const login = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   const { id } = req.params;
-  try {
-    const result = await pool.query("SELECT id, nombre, bio, avatar_url, status FROM users WHERE id = $1", [id]);
-    if (result.rows.length === 0) return res.status(404).json({ mensaje: "Usuario no encontrado" });
 
-    // Obtener el último mensaje enviado o recibido por el usuario
+  try {
+    const user = await userModel.findUserById(id);
+    if (!user) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
     const lastMessage = await messageModel.getLastMessage(id);
 
     res.json({
-      ...result.rows[0],
+      ...user,
       lastMessage: lastMessage ? lastMessage.content : null,
     });
   } catch (err) {
@@ -65,6 +65,10 @@ const getUserProfile = async (req, res) => {
 const getAllUsersWithLastMessage = async (req, res) => {
   try {
     const users = await userModel.findAllUsers();
+    if (!users || !Array.isArray(users)) {
+      return res.status(500).json({ mensaje: "No se pudieron obtener los usuarios" });
+    }
+
     const usersWithLastMessage = await Promise.all(
       users.map(async (user) => {
         const lastMessage = await messageModel.getLastMessage(user.id);

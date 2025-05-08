@@ -16,7 +16,19 @@ const findUserByEmail = async (email) => {
   return result.rows[0];
 };
 
+const findAllUsers = async () => {
+  const result = await pool.query("SELECT id, nombre, email, avatar_url, status FROM users");
+  return result.rows;
+};
+
+const findUserById = async (id) => {
+  const result = await pool.query("SELECT id, nombre, bio, avatar_url, status FROM users WHERE id = $1", [id]);
+  return result.rows[0];
+};
+
 module.exports = {
   createUser,
   findUserByEmail,
+  findAllUsers,
+  findUserById,
 };
