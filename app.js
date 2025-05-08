@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-app.use("/api", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {

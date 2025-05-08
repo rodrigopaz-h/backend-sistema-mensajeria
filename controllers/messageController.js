@@ -1,4 +1,5 @@
 const messageModel = require("../models/messageModel");
+const uploadToFirebase = require("../utils/uploadToFirebase");
 
 const getMessages = async (req, res) => {
   try {
@@ -15,12 +16,20 @@ const sendMessage = async (req, res) => {
   const senderId = req.userId;
   const senderName = req.userName;
 
-  if (!content || !senderId) {
-    return res.status(400).json({ mensaje: "Faltan datos para enviar el mensaje" });
+  if (!content && !req.file) {
+    return res.status(400).json({ mensaje: "Debes enviar un mensaje o un archivo" });
   }
 
   try {
-    const message = await messageModel.createMessage(senderId, senderName, content);
+    let fileUrl = null;
+    let fileName = null;
+
+    if (req.file) {
+      fileUrl = await uploadToFirebase(req.file);
+      fileName = req.file.originalname;
+    }
+
+    const message = await messageModel.createMessage(senderId, senderName, content || null, null, fileUrl, fileName);
     res.status(201).json(message);
   } catch (error) {
     console.error(error);

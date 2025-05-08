@@ -14,7 +14,9 @@ async function executeSQLFromFile() {
     await client.connect();
     console.log("🟢 Conectado a la base de datos");
 
-    const sql = fs.readFileSync("./db/init.sql", "utf8");
+    // const sql = fs.readFileSync("./db/init.sql", "utf8");
+    const sql = fs.readFileSync("./db/alter_user_table.sql", "utf8");
+    // const sql = fs.readFileSync("./db/alter_message_table.sql", "utf8");
     await client.query(sql);
 
     console.log("✅ Script ejecutado con éxito");

@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const messageModel = require("../models/messageModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -42,7 +43,48 @@ const login = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query("SELECT id, nombre, bio, avatar_url, status FROM users WHERE id = $1", [id]);
+    if (result.rows.length === 0) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
+    // Obtener el último mensaje enviado o recibido por el usuario
+    const lastMessage = await messageModel.getLastMessage(id);
+
+    res.json({
+      ...result.rows[0],
+      lastMessage: lastMessage ? lastMessage.content : null,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ mensaje: "Error al obtener perfil" });
+  }
+};
+
+const getAllUsersWithLastMessage = async (req, res) => {
+  try {
+    const users = await userModel.findAllUsers();
+    const usersWithLastMessage = await Promise.all(
+      users.map(async (user) => {
+        const lastMessage = await messageModel.getLastMessage(user.id);
+        return {
+          ...user,
+          lastMessage: lastMessage ? lastMessage.content : null,
+        };
+      })
+    );
+
+    res.json(usersWithLastMessage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ mensaje: "Error al obtener usuarios" });
+  }
+};
+
 module.exports = {
   register,
   login,
+  getUserProfile,
+  getAllUsersWithLastMessage,
 };

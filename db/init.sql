@@ -1,3 +1,7 @@
+-- Este script inicializa la base de datos para la aplicación de mensajería.
+-- Revisar archivos "alter table", para concer las modificaciones que se han hecho a la base de datos.
+
+
 -- Crear tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
